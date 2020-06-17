@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Gdk;
+using Gtk;
+using Window = Gtk.Window;
+using WindowType = Gtk.WindowType;
 
 namespace Playground.Gtk
 {
@@ -6,7 +9,26 @@ namespace Playground.Gtk
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Application.Init();
+
+            var window = new Window(WindowType.Toplevel)
+            {
+                DefaultSize = new Size(300, 200),
+                WindowPosition = WindowPosition.Center
+            };
+
+            window.Destroyed += (s, e) => Application.Quit();
+
+            var label = new Label("Hello World!")
+            {
+                Halign = Align.Center,
+                Valign = Align.Center
+            };
+
+            window.Add(label);
+            window.ShowAll();
+
+            Application.Run();
         }
     }
 }
