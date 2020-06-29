@@ -1,34 +1,18 @@
-﻿using Gdk;
-using Gtk;
-using Window = Gtk.Window;
-using WindowType = Gtk.WindowType;
+﻿using Gtk;
+using MvvmCross.Platforms.Gtk.Core;
+using System;
 
 namespace Playground.Gtk
 {
-    class Program
+    internal static class Program
     {
-        static void Main(string[] args)
+        internal static void Main(string[] args)
         {
             Application.Init();
 
-            var window = new Window(WindowType.Toplevel)
-            {
-                DefaultSize = new Size(300, 200),
-                WindowPosition = WindowPosition.Center
-            };
+            var app = new MvxGtkApplication<Setup, Core.App>("dev.kipters.mvxgtk", GLib.ApplicationFlags.None);
 
-            window.Destroyed += (s, e) => Application.Quit();
-
-            var label = new Label("Hello World!")
-            {
-                Halign = Align.Center,
-                Valign = Align.Center
-            };
-
-            window.Add(label);
-            window.ShowAll();
-
-            Application.Run();
+            Environment.ExitCode = app.Run(null, args);
         }
     }
 }
