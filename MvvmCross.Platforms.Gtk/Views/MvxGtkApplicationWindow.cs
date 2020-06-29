@@ -1,10 +1,11 @@
-﻿using Gtk;
+﻿using System;
+using Gtk;
 using MvvmCross.Binding.BindingContext;
 using MvvmCross.ViewModels;
 
 namespace MvvmCross.Platforms.Gtk.Views
 {
-    public abstract class MvxGtkApplicationWindow : ApplicationWindow, IMvxGtkView
+    public abstract class MvxGtkApplicationWindow : ApplicationWindow, IMvxGtkWindow
     {
         private IMvxBindingContext _bindingContext;
         protected MvxGtkApplicationWindow(Application application) : base(application)

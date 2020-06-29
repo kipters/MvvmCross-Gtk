@@ -64,6 +64,13 @@ namespace MvvmCross.Platforms.Gtk.Core
 
         protected override IMvxViewsContainer CreateViewsContainer()
         {
+            var container = CreateGtkViewsContainer();
+            Mvx.IoCProvider.RegisterSingleton<IMvxGtkViewLoader>(container);
+            return container;
+        }
+
+        protected virtual IMvxGtkViewsContainer CreateGtkViewsContainer()
+        {
             return new MvxGtkViewsContainer();
         }
 

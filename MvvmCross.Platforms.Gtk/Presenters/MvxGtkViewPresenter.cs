@@ -5,6 +5,7 @@ using MvvmCross.Presenters;
 using MvvmCross.Presenters.Attributes;
 using MvvmCross.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MvvmCross.Platforms.Gtk.Presenters
@@ -12,16 +13,17 @@ namespace MvvmCross.Platforms.Gtk.Presenters
     public class MvxGtkViewPresenter : MvxAttributeViewPresenter, IMvxGtkViewPresenter
     {
         private readonly Application _application;
+        private readonly Dictionary<IMvxViewModel, Widget> _views = new Dictionary<IMvxViewModel, Widget>();
 
         public MvxGtkViewPresenter(Application application)
         {
             _application = application;
         }
 
-        private IMvxViewModelLoader _loader;
-        private IMvxViewModelLoader ViewModelLoader => _loader ??= Mvx.IoCProvider.Resolve<IMvxViewModelLoader>();
+        private IMvxGtkViewLoader _viewLoader;
+        private IMvxGtkViewLoader ViewLoader => _viewLoader ??= Mvx.IoCProvider.Resolve<IMvxGtkViewLoader>();
 
-        public Window MainWindow { get; private set; }
+        public Window MainWindow { get; set; }
 
         public override MvxBasePresentationAttribute CreatePresentationAttribute(Type viewModelType, Type viewType)
         {
@@ -35,36 +37,50 @@ namespace MvvmCross.Platforms.Gtk.Presenters
 
         public override void RegisterAttributeTypes()
         {
-            AttributeTypesToActionsDictionary.Register<MvxWindowPresentationAttribute>(CreateAndShowWindow, CloseWindow);
+            AttributeTypesToActionsDictionary.Register<MvxWindowPresentationAttribute>(
+                (viewType, attribute, request) =>
+                {
+                    var view = ViewLoader.CreateWindow(viewType, request);
+                    _views.Add(view.viewModel, view.window);
+                    return ShowWindow(view.window, attribute, request);
+                },
+                CloseWindow
+            );
         }
 
-        private Task<bool> CloseWindow(IMvxViewModel viewModel, MvxWindowPresentationAttribute attribute)
+        private Task<bool> ShowWindow(Window view, MvxWindowPresentationAttribute attribute, MvxViewModelRequest request)
         {
-            throw new NotImplementedException();
-        }
-
-        private Task<bool> CreateAndShowWindow(Type viewType, MvxWindowPresentationAttribute attribute, MvxViewModelRequest request)
-        {
-            if (!typeof(Window).IsAssignableFrom(viewType))
+            Window window = view switch
             {
-                throw new Exception();
-            }
+                IMvxGtkWindow mvxWindow => (Window) mvxWindow,
+                Window normalWindow => normalWindow,
+                null => throw new ArgumentNullException(nameof(view))
+            };
 
-            var mvxWindow = (IMvxGtkView) Mvx.IoCProvider.IoCConstruct(viewType);
-            var window = (Window)mvxWindow;
+            if (!(window is ApplicationWindow))
+            {
+                window.Application = _application;
+            }
 
             if (MainWindow is null)
             {
                 MainWindow = window;
             }
 
-            mvxWindow.ViewModel = request is MvxViewModelInstanceRequest instance
-                ? instance.ViewModelInstance
-                : ViewModelLoader.LoadViewModel(request, null);
-
             window.ShowAll();
 
             return Task.FromResult(true);
+        }
+
+        private Task<bool> CloseWindow(IMvxViewModel viewModel, MvxWindowPresentationAttribute attribute)
+        {
+            if (_views.Remove(viewModel, out var widget) && widget is Window window)
+            {
+                window.Close();
+                return Task.FromResult(true);
+            }
+
+            return Task.FromResult(false);
         }
     }
 }

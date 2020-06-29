@@ -37,6 +37,7 @@ namespace Playground.Gtk.Views
             };
 
             var button = new Button("Show Dialog");
+            var secondButton = new Button("Show second view");
 
             var header = new HeaderBar
             {
@@ -47,6 +48,7 @@ namespace Playground.Gtk.Views
             grid.Attach(entry, 0, 2, 1, 1);
             //grid.Attach(button, 0, 3, 1, 1);
             header.Add(button);
+            header.Add(secondButton);
 
             Add(grid);
             Titlebar = header;
@@ -57,6 +59,7 @@ namespace Playground.Gtk.Views
             set.Bind(label).To(vm => vm.Message).OneWay();
             set.Bind(entry).To(vm => vm.Message).TwoWay();
             set.Bind(button).To(vm => vm.DialogCommand).OneTime();
+            set.Bind(secondButton).To(vm => vm.SecondViewCommand).OneTime();
             set.Apply();
         }
     }
