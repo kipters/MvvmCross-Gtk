@@ -9,9 +9,9 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/Playground.Gtk/bin/Debug/netcoreapp3.1/Playground.Gtk.dll",
-            "args": [],
-            "cwd": "${workspaceFolder}",
+            "program": "${workspaceFolder}/src/Playground.Gtk/bin/Debug/net5.0/Playground.Gtk.dll",
+            "args": [ "--testarg" ],
+            "cwd": "${workspaceFolder}/src/Playground.Gtk/bin/Debug/net5.0/",
             "console": "internalConsole",
             "stopAtEntry": false
         },

@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/Playground.Gtk/Playground.Gtk.csproj",
+                "${workspaceFolder}/src/Playground.Gtk/Playground.Gtk.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
