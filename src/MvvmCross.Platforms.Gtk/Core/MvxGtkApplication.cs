@@ -1,4 +1,4 @@
-﻿using GLib;
+using GLib;
 using MvvmCross.Core;
 using MvvmCross.ViewModels;
 using System;
@@ -6,18 +6,23 @@ using Application = Gtk.Application;
 
 namespace MvvmCross.Platforms.Gtk.Core
 {
-    public abstract class MvxGtkApplication : Application, IMvxGtkApplication
+    public abstract class MvxGtkApplication : global::Gtk.Application, IMvxGtkApplication
     {
-        protected MvxGtkApplication(string application_id, ApplicationFlags flags) : base(application_id, flags)
+        protected MvxGtkApplication(string application_id, ApplicationFlags flags)
+            : base(application_id, flags)
         {
             RegisterSetup();
-            Activated += OnActivatedInternal;
         }
 
-        private void OnActivatedInternal(object sender, EventArgs e)
+        protected override void OnStartup()
         {
+            base.OnStartup();
             MvxGtkSetupSingleton.EnsureSingletonAvailable(this).EnsureInitialized();
-            OnAppActivated();
+        }
+
+        protected override void OnActivated()
+        {
+            base.OnActivated();
             RunAppStart();
         }
 
@@ -29,8 +34,6 @@ namespace MvvmCross.Platforms.Gtk.Core
                 startup.Start(null);
             }
         }
-
-        public abstract void OnAppActivated();
         public abstract void RegisterSetup();
     }
 
@@ -40,10 +43,6 @@ namespace MvvmCross.Platforms.Gtk.Core
     {
         public MvxGtkApplication(string application_id, ApplicationFlags flags)
             : base(application_id, flags)
-        {
-        }
-
-        public override void OnAppActivated()
         {
         }
 
