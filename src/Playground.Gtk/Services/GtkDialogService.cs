@@ -1,7 +1,7 @@
-﻿using Gtk;
+using System.Threading.Tasks;
+using Gtk;
 using MvvmCross.Platforms.Gtk.Presenters;
 using Playground.Core.Services;
-using System.Threading.Tasks;
 
 namespace Playground.Gtk.Services
 {

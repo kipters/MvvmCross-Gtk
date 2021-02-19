@@ -1,4 +1,4 @@
-﻿using Gtk;
+using Gtk;
 using MvvmCross.Binding;
 using MvvmCross.Binding.BindingContext;
 using MvvmCross.Binding.Bindings.Target.Construction;
@@ -14,15 +14,18 @@ namespace MvvmCross.Platforms.Gtk.Binding
 
             registry.RegisterCustomBindingFactory<Label>(
                 nameof(Label.Text),
-                view => new MvxLabelTextTargetBinding(view));
+                view => new MvxLabelTextTargetBinding(view)
+            );
 
             registry.RegisterCustomBindingFactory<Entry>(
                 nameof(Entry.Text),
-                view => new MvxEntryTextTargetBinding(view));
+                view => new MvxEntryTextTargetBinding(view)
+            );
 
             registry.RegisterCustomBindingFactory<Button>(
                 nameof(Button.Clicked),
-                view => new MvxButtonTargetBinding(view));
+                view => new MvxButtonTargetBinding(view)
+            );
         }
 
         protected override void FillDefaultBindingNames(IMvxBindingNameRegistry registry)

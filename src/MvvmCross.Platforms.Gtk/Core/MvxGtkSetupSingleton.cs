@@ -1,4 +1,4 @@
-﻿using MvvmCross.Core;
+using MvvmCross.Core;
 
 namespace MvvmCross.Platforms.Gtk.Core
 {

@@ -1,15 +1,15 @@
-﻿using Gtk;
+using System;
+using Gtk;
 using MvvmCross.Binding;
 using MvvmCross.Binding.Bindings.Target;
 using MvvmCross.Binding.Extensions;
 using MvvmCross.WeakSubscription;
-using System;
 
 namespace MvvmCross.Platforms.Gtk.Binding.Target
 {
     public class MvxEntryTextTargetBinding : MvxConvertingTargetBinding<Entry, string>, IMvxEditableTextView
     {
-        private IDisposable _subscriptionChanged;
+        private IDisposable? _subscriptionChanged;
 
         public MvxEntryTextTargetBinding(Entry target) : base(target)
         {
@@ -26,7 +26,7 @@ namespace MvvmCross.Platforms.Gtk.Binding.Target
             _subscriptionChanged = Target.WeakSubscribe(nameof(Entry.Changed), HandleChanged);
         }
 
-        private void HandleChanged(object sender, EventArgs e) => FireValueChanged(Target.Text);
+        private void HandleChanged(object? sender, EventArgs e) => FireValueChanged(Target.Text);
 
         public string CurrentText => Target.Text;
 

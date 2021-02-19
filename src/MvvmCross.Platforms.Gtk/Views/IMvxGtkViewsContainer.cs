@@ -1,4 +1,4 @@
-﻿using MvvmCross.Views;
+using MvvmCross.Views;
 
 namespace MvvmCross.Platforms.Gtk.Views
 {

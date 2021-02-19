@@ -1,11 +1,10 @@
-﻿using MvvmCross.Base;
-using MvvmCross.Presenters;
-using MvvmCross.ViewModels;
-using MvvmCross.Views;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Application = Gtk.Application;
+using MvvmCross.Base;
+using MvvmCross.Presenters;
+using MvvmCross.ViewModels;
+using MvvmCross.Views;
 
 namespace MvvmCross.Platforms.Gtk.Views
 {
@@ -20,7 +19,7 @@ namespace MvvmCross.Platforms.Gtk.Views
             _presenter = presenter;
         }
 
-        public override bool IsOnMainThread => !(SynchronizationContext.Current is null);
+        public override bool IsOnMainThread => SynchronizationContext.Current is not null;
 
         public async Task<bool> ChangePresentation(MvxPresentationHint hint)
         {
@@ -30,7 +29,7 @@ namespace MvvmCross.Platforms.Gtk.Views
 
         public override bool RequestMainThreadAction(Action action, bool maskExceptions = true)
         {
-            Application.Invoke((s, e) => ExceptionMaskedAction(action, maskExceptions));
+            global::Gtk.Application.Invoke((s, e) => ExceptionMaskedAction(action, maskExceptions));
             return true;
         }
 

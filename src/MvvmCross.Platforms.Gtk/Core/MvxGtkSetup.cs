@@ -1,4 +1,7 @@
-﻿using Gtk;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using MvvmCross.Binding;
 using MvvmCross.Core;
 using MvvmCross.Platforms.Gtk.Binding;
@@ -7,17 +10,23 @@ using MvvmCross.Platforms.Gtk.Views;
 using MvvmCross.Presenters;
 using MvvmCross.ViewModels;
 using MvvmCross.Views;
+using GtkApp = Gtk.Application;
 
 namespace MvvmCross.Platforms.Gtk.Core
 {
     public abstract class MvxGtkSetup : MvxSetup, IMvxGtkSetup
     {
-        private IMvxGtkViewPresenter _presenter;
-        private Application _application;
+        private IMvxGtkViewPresenter? _presenter;
+        private GtkApp? _application;
         protected IMvxGtkViewPresenter Presenter => _presenter ??= CreateViewPresenter();
 
         protected override void InitializeFirstChance()
         {
+            if (_application is null)
+            {
+                throw new Exception("Setup.PlatformInitialize() hasn't been called");
+            }
+
             RegisterPresenter();
             Mvx.IoCProvider.RegisterSingleton(_application);
             base.InitializeFirstChance();
@@ -40,13 +49,18 @@ namespace MvvmCross.Platforms.Gtk.Core
             return new MvxGtkBindingBuilder();
         }
 
-        public virtual void PlatformInitialize(Application application)
+        internal virtual void PlatformInitialize(MvxGtkApplication application)
         {
             _application = application;
         }
 
         protected virtual IMvxGtkViewPresenter CreateViewPresenter()
         {
+            if (_application is null)
+            {
+                throw new Exception("Setup.PlatformInitialize() hasn't been called");
+            }
+
             return new MvxGtkViewPresenter(_application);
         }
 
