@@ -1,8 +1,7 @@
+using System.Threading;
 using GLib;
 using MvvmCross.Core;
 using MvvmCross.ViewModels;
-using System;
-using Application = Gtk.Application;
 
 namespace MvvmCross.Platforms.Gtk.Core
 {
@@ -11,6 +10,7 @@ namespace MvvmCross.Platforms.Gtk.Core
         protected MvxGtkApplication(string application_id, ApplicationFlags flags)
             : base(application_id, flags)
         {
+            SynchronizationContext.SetSynchronizationContext(new GLib.GLibSynchronizationContext());
             RegisterSetup();
         }
 
