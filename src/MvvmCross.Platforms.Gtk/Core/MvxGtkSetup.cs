@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using MvvmCross.Binding;
 using MvvmCross.Core;
 using MvvmCross.Platforms.Gtk.Binding;
@@ -85,7 +82,12 @@ namespace MvvmCross.Platforms.Gtk.Core
 
         protected virtual IMvxGtkViewsContainer CreateGtkViewsContainer()
         {
-            return new MvxGtkViewsContainer();
+            if (_application is null)
+            {
+                throw new Exception("Setup.PlatformInitialize() hasn't been called");
+            }
+
+            return new MvxGtkViewsContainer(_application);
         }
 
         protected override IMvxNameMapping CreateViewToViewModelNaming()

@@ -1,21 +1,21 @@
-﻿using Gtk;
+using Gtk;
 using MvvmCross.Binding.BindingContext;
-using MvvmCross.Platforms.Gtk.Presenters.Attributes;
 using MvvmCross.Platforms.Gtk.Views;
 using Playground.Core.ViewModels;
 
 namespace Playground.Gtk.Views
 {
-    [MvxWindowPresentation]
     public class MainWindow : MvxGtkApplicationWindow<MainViewModel>
     {
+        private readonly Entry _entry;
+        private readonly Label _label;  
+        private readonly Button _button;
+        private readonly Button _secondButton;
+
         public MainWindow(Application application) : base(application)
         {
-            DefaultSize = new Gdk.Size(400, 300);
-        }
+            DefaultSize = new Gdk.Size(600, 450);
 
-        public override void OnViewModelSet()
-        {
             var grid = new Grid
             {
                 Margin = 10,
@@ -38,6 +38,7 @@ namespace Playground.Gtk.Views
 
             var button = new Button("Show Dialog");
             var secondButton = new Button("Show second view");
+            secondButton.StyleContext.AddClass("suggested-action");
 
             var header = new HeaderBar
             {
@@ -46,7 +47,6 @@ namespace Playground.Gtk.Views
 
             grid.Attach(label, 0, 1, 1, 1);
             grid.Attach(entry, 0, 2, 1, 1);
-            //grid.Attach(button, 0, 3, 1, 1);
             header.Add(button);
             header.Add(secondButton);
 
@@ -55,11 +55,19 @@ namespace Playground.Gtk.Views
             Title = "Playground.Gtk";
             ShowMenubar = true;
 
+            _entry = entry;
+            _label = label;
+            _button = button;
+            _secondButton = secondButton;
+        }
+
+        public override void OnViewModelSet()
+        {
             var set = this.CreateBindingSet<MainWindow, MainViewModel>();
-            set.Bind(label).To(vm => vm.Message).OneWay();
-            set.Bind(entry).To(vm => vm.Message).TwoWay();
-            set.Bind(button).To(vm => vm.DialogCommand).OneTime();
-            set.Bind(secondButton).To(vm => vm.SecondViewCommand).OneTime();
+            set.Bind(_entry).To(vm => vm.Message).TwoWay();
+            set.Bind(_label).To(vm => vm.Message).OneWay();
+            set.Bind(_button).To(vm => vm.DialogCommand).OneTime();
+            set.Bind(_secondButton).To(vm => vm.SecondViewCommand).OneTime();
             set.Apply();
         }
     }

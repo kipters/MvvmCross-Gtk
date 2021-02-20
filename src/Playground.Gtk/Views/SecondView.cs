@@ -1,3 +1,4 @@
+using System;
 using Gtk;
 using MvvmCross.Binding.BindingContext;
 using MvvmCross.Platforms.Gtk.Presenters.Attributes;
@@ -6,23 +7,16 @@ using Playground.Core.ViewModels;
 
 namespace Playground.Gtk.Views
 {
-    [MvxWindowPresentation]
+    [MvxWindowPresentation(ResourceName = "glade/second_window.glade", ObjectId = "window1")]
     public class SecondView : MvxGtkApplicationWindow<SecondViewModel>
     {
         private readonly Label _label;
         private readonly Button _closeButton;
-
-        public SecondView(Application application) : base(application)
+        
+        public SecondView(IntPtr raw, Builder builder) : base(raw, builder)
         {
-            DefaultSize = new Gdk.Size(400, 300);
-
-            _label = new Label();
-            Add(_label);
-
-            _closeButton = new Button("Close");
-            var header = new HeaderBar { ShowCloseButton = true };
-            header.Add(_closeButton);
-            Titlebar = header;
+            _closeButton = (Button) Builder!.GetObject("button1");
+            _label = (Label) Builder!.GetObject("timeLabel");
         }
 
         public override void OnViewModelSet()

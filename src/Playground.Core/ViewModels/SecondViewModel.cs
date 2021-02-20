@@ -24,13 +24,14 @@ namespace Playground.Core.ViewModels
             _timer.Dispose();
         }
 
-        private void OnTick(object state)
+        private void OnTick(object? state)
         {
             var time = DateTime.UtcNow.ToLongTimeString();
             Debug.WriteLine(time);
+            Time = time;
         }
 
-        private string _time;
+        private string _time = string.Empty;
         public string Time { get => _time; set => SetProperty(ref _time, value); }
 
         public ICommand CloseCommand { get; }

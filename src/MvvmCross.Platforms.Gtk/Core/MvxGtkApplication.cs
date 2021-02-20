@@ -1,7 +1,9 @@
 using System.Threading;
 using GLib;
+using Gtk;
 using MvvmCross.Core;
 using MvvmCross.ViewModels;
+using MvvmCross.Views;
 
 namespace MvvmCross.Platforms.Gtk.Core
 {
@@ -35,6 +37,16 @@ namespace MvvmCross.Platforms.Gtk.Core
             }
         }
         public abstract void RegisterSetup();
+
+        protected override void OnWindowRemoved(Window window)
+        {
+            base.OnWindowRemoved(window);
+            if (window is IMvxView mvx)
+            {
+                mvx.ViewModel.ViewDisappeared();
+                mvx.ViewModel.ViewDestroy();
+            }
+        }
     }
 
     public class MvxGtkApplication<TSetup, TApplication> : MvxGtkApplication

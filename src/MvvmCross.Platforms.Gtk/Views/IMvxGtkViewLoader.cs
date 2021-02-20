@@ -1,11 +1,14 @@
 using System;
-using Gtk;
+using MvvmCross.Platforms.Gtk.Presenters.Attributes;
 using MvvmCross.ViewModels;
+using GtkWidget = Gtk.Widget;
 
 namespace MvvmCross.Platforms.Gtk.Views
 {
     public interface IMvxGtkViewLoader
     {
-        (Window window, IMvxViewModel viewModel) CreateWindow(Type viewType, MvxViewModelRequest request);
+        GtkWidget CreateView(MvxViewModelRequest request);
+        GtkWidget CreateView(Type viewType);
+        GtkWidget CreateGladeView(MvxViewModelRequest request, IMvxGladeProperties gladeProperties);
     }
 }

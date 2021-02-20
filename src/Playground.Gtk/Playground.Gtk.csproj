@@ -6,7 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GtkSharp" Version="3.22.25.98" />
+    <!-- <None Include="glade/**/*.glade" CopyToOutputDirectory="Always" CopyToPublishDirectory="Always" /> -->
+    <EmbeddedResource Include="glade/**/*.glade" />
   </ItemGroup>
 
   <ItemGroup>

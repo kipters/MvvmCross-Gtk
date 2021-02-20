@@ -1,17 +1,12 @@
-﻿using Gtk;
-using MvvmCross.Platforms.Gtk.Core;
-using System;
+﻿using System;
 
 namespace Playground.Gtk
 {
-    internal static class Program
+    class Program
     {
-        internal static void Main(string[] args)
+        static void Main(string[] args)
         {
-            Application.Init();
-
-            var app = new MvxGtkApplication<Setup, Core.App>("dev.kipters.mvxgtk", GLib.ApplicationFlags.None);
-
+            var app = new GtkApp();
             Environment.ExitCode = app.Run(null, args);
         }
     }

@@ -1,14 +1,21 @@
-﻿using System;
+using System;
+using System.Diagnostics;
 using Gtk;
 using MvvmCross.Binding.BindingContext;
 using MvvmCross.ViewModels;
 
 namespace MvvmCross.Platforms.Gtk.Views
 {
-    public abstract class MvxGtkApplicationWindow : ApplicationWindow, IMvxGtkWindow
+    public abstract class MvxGtkApplicationWindow : global::Gtk.ApplicationWindow, IMvxGtkWindow
     {
-        private IMvxBindingContext _bindingContext;
-        protected MvxGtkApplicationWindow(Application application) : base(application)
+        private IMvxBindingContext? _bindingContext;
+        protected MvxGtkApplicationWindow(IntPtr raw, Builder builder) : base(raw)
+        {
+            Builder = builder;
+        }
+
+        protected MvxGtkApplicationWindow(global::Gtk.Application application)
+            : base(application)
         {
         }
 
@@ -18,7 +25,10 @@ namespace MvvmCross.Platforms.Gtk.Views
             set
             {
                 DataContext = value;
+                value.ViewCreated();
+                value.ViewAppearing();
                 OnViewModelSet();
+                value.ViewAppeared();
             }
         }
 
@@ -34,13 +44,25 @@ namespace MvvmCross.Platforms.Gtk.Views
             set => _bindingContext = value;
         }
 
-        public abstract void OnViewModelSet();
+        public virtual void OnViewModelSet() { }
+        public Builder? Builder { get; }
+
+        protected override void OnDestroyed()
+        {
+            base.OnDestroyed();
+            ViewModel.ViewDisappearing();
+        }
     }
 
     public abstract class MvxGtkApplicationWindow<TViewModel> : MvxGtkApplicationWindow, IMvxGtkView<TViewModel>
         where TViewModel : class, IMvxViewModel
     {
-        protected MvxGtkApplicationWindow(Application application) : base(application)
+        protected MvxGtkApplicationWindow(global::Gtk.Application application)
+            : base(application)
+        {
+        }
+
+        protected MvxGtkApplicationWindow(IntPtr raw, Builder builder) : base(raw, builder)
         {
         }
 
